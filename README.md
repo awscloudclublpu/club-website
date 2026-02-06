@@ -1,47 +1,19 @@
-# Dawn CTF 2026
+# Horizon
 
-Official landing page for **Dawn CTF 2026** - A premier 12-hour overnight cybersecurity competition organized by AWS Cloud Club at Lovely Professional University.
+Official landing page for **Horizon** – A flagship overnight technical event series organized by AWS Cloud Club at Lovely Professional University.
 
 ## About the Event
 
-**Dawn CTF 2026** is an intensive cybersecurity Capture The Flag competition designed to challenge and enhance the skills of security enthusiasts, students, and professionals. Set against the backdrop of an overnight marathon, participants will face real-world security challenges across multiple domains.
-
-### Event Details
-
-- **Date**: April 2-4, 2026
-- **Duration**: 12-hour overnight CTF (Workshop Day + Competition)
-- **Location**: Lovely Professional University, Punjab, India
-- **Organizer**: AWS Cloud Club LPU
-- **Format**: Jeopardy-style CTF competition
-- **Audience**: Students, cybersecurity enthusiasts, all skill levels welcome
+**Horizon** is a unique blend of hands-on workshops, an overnight hackathon, and a competitive Capture The Flag (CTF) challenge. Designed for students and tech enthusiasts of all skill levels, Horizon promotes learning, innovation, and collaboration through real-world problem statements and immersive experiences.
 
 ### Event Highlights
 
-- **Real-World Challenges**: Authentic security scenarios across web exploitation, cryptography, forensics, and more
-- **Learning Focused**: Pre-CTF workshops to prepare participants
-- **Prize Pool**: Exciting prizes for top performers
-- **Overnight Experience**: 12-hour midnight to dawn hacking marathon
-- **Networking**: Connect with 500+ cybersecurity enthusiasts
-- **AWS Integration**: Leverage AWS services and cloud security
-
-### Schedule
-
-**April 2, 2026 - Workshop Day**
-- 9:00 AM - Registration & Breakfast
-- 10:00 AM - Opening Ceremony
-- 11:00 AM - CTF Basics Workshop
-- 2:00 PM - Lunch Break
-- 3:00 PM - Hands-on Training Sessions
-- 6:00 PM - Day 1 Wrap-up
-
-**April 3-4, 2026 - Overnight CTF**
-- 8:00 PM - Check-in & Dinner
-- 9:00 PM - **CTF Competition Begins**
-- 12:00 AM - Midnight Snacks
-- 3:00 AM - Energy Boost Break
-- 6:00 AM - Breakfast Service
-- 9:00 AM - **Competition Ends**
-- 10:00 AM - Results & Prize Distribution
+- **Hands-On Learning**: Workshops and guided sessions led by industry professionals
+- **Overnight Hackathon**: Build innovative solutions in an intensive overnight challenge
+- **Capture The Flag (CTF)**: Compete in real-world cybersecurity scenarios
+- **Team Collaboration**: Work in teams to brainstorm, build, and solve technical problems
+- **AWS-Powered Experience**: Explore cloud computing and security with AWS technologies
+- **Networking**: Connect with 900+ active members and industry experts
 
 ## Tech Stack
 
@@ -52,17 +24,19 @@ Official landing page for **Dawn CTF 2026** - A premier 12-hour overnight cybers
 - **Icons**: Font Awesome 6.5.1
 - **Theme**: Red & Black Cybersecurity Aesthetic
 
+
 ## Prerequisites
 
 - Node.js 18.x or higher
 - npm, yarn, pnpm, or bun
 
+
 ## Setup Instructions
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/awscloudclublpu/dawnctf_frontend.git
-   cd dawnctf
+   git clone https://github.com/awscloudclublpu/horizon_frontend.git
+   cd horizon_frontend
    ```
 
 2. **Install dependencies**
@@ -92,25 +66,19 @@ Official landing page for **Dawn CTF 2026** - A premier 12-hour overnight cybers
    npm start
    ```
 
+
 ## Project Structure
 
 ```
-dawnctf/
+horizon_frontend/
 ├── app/
 │   ├── globals.css          # Global styles & animations
 │   ├── layout.tsx           # Root layout
 │   ├── page.tsx             # Main landing page
-│   └── login/
-│       └── page.tsx         # Login page
+│   └── auth/                # Other pages as per requirement
 ├── components/
 │   ├── Navigation.tsx       # Header navigation
-│   └── ui/
-│       └── landing/
-│           ├── HeroSection.tsx
-│           ├── EventOverview.tsx
-│           ├── ScheduleSection.tsx
-│           ├── OrganizerInfo.tsx
-│           └── Footer.tsx
+│   └── ui/                  # UI Components
 ├── public/
 │   ├── font/
 │   │   └── Hacker.ttf       # Custom hacker font
@@ -119,28 +87,20 @@ dawnctf/
 │   └── video/
 │       └── background.mp4   # Hero background video
 └── lib/
-    └── utils.ts
+   └── utils.ts
 ```
-
-## Features
-
-- **Hacker Aesthetic**: Red & black theme with glitch animations
-- **Performance**: Optimized with Next.js App Router
-- **Responsive**: Mobile-first design
-- **Animations**: Custom CSS keyframe animations (glitch, flicker, scanline)
-- **Custom Typography**: Hacker.ttf font for authentic cybersecurity look
-- **Component-Based**: Modular architecture for maintainability
 
 ## Contact
 
 - **Email**: club@awslpu.in
 - **Website**: [awslpu.in](https://awslpu.in)
-- **Social Media**: Follow AWS Cloud Club LPU on LinkedIn, Instagram, Twitter
+- **Social Media**: Follow AWS Cloud Club LPU on [LinkedIn](https://www.linkedin.com/company/aws-cloud-community-lpu), [Instagram](https://instagram.com/awscloudcommunity.lpu)
+
 
 ## License
 
-© 2026 Dawn CTF. All rights reserved. Powered by AWS Cloud Club LPU.
+© Horizon. All rights reserved. Powered by AWS Cloud Club LPU.
 
 ---
 
-**Ready to test your skills?** Join us for an unforgettable overnight hacking experience! 🔴⚫
+**Ready to learn, build, and compete?** Join us for an unforgettable overnight experience at Horizon! 🔴⚫
