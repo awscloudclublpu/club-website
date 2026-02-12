@@ -5,7 +5,7 @@ export default function HeroSection() {
     <section className="relative w-full min-h-screen flex items-center justify-center bg-black overflow-hidden pt-16">
       <video
         className="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
-        src="/video/background.mp4"
+        src="https://res.cloudinary.com/dpuhecead/video/upload/v1770919135/background_qxklnd.mp4"
         autoPlay
         loop
         muted
