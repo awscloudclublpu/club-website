@@ -68,7 +68,7 @@ export default function HeroSection() {
             <div className="text-3xl md:text-4xl font-bold text-red-600 group-hover:animate-glitch">
               1K+
             </div>
-            <div className="text-white/50 text-sm mt-1 font-mono">[PARTICIPANTS]</div>
+            <div className="text-white/50 text-sm mt-1 font-mono">[attendie]</div>
           </div>
           <div className="text-center group">
             <div className="text-3xl md:text-4xl font-bold text-red-600 group-hover:animate-glitch">
