@@ -77,18 +77,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body
-        className="relative min-h-screen font-sans antialiased overflow-x-hidden"
-        style={{
-          background:
-            "linear-gradient(135deg, #0B1D3A 0%, #132E59 50%, #0B1D3A 100%)",
-          backgroundAttachment: "fixed",
-        }}
-      >
+    <html lang="en" data-scroll-behavior="smooth">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
+        />
+      </head>
+
+      <body className="relative min-h-screen font-sans antialiased overflow-x-hidden">
         <NavigationBar />
         <main>{children}</main>
       </body>
     </html>
   );
 }
+
+

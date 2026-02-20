@@ -4,7 +4,7 @@ import { treeifyError } from "zod/v4/core";
 
 const apiUrl = process.env.API_BASE_URL;
 
-if(!apiUrl){
+if (!apiUrl) {
     throw new Error("API_BASE_URL is not defined in environment variables");
 }
 
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
         const body = await req.json();
         const parsed = RegisterSchema.safeParse(body);
 
-        if(!parsed.success){
+        if (!parsed.success) {
             return NextResponse.json(
                 {
                     success: false,
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
             )
         };
 
-        const backendResponse = await fetch(`${apiUrl}/register`, {
+        const backendResponse = await fetch(`${apiUrl}/auth/register`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -31,9 +31,15 @@ export async function POST(req: Request) {
             body: JSON.stringify(parsed.data)
         });
 
-        const data = await backendResponse.json();
+        const responseText = await backendResponse.text();
+        let data: Record<string, unknown>;
+        try {
+            data = JSON.parse(responseText);
+        } catch {
+            data = { message: responseText || `Registration failed (${backendResponse.status})` };
+        }
 
-        if(!backendResponse.ok){
+        if (!backendResponse.ok) {
             return NextResponse.json(
                 {
                     success: false,
@@ -48,10 +54,10 @@ export async function POST(req: Request) {
                 message: data?.message || "Registration successful",
                 data
             }, { status: backendResponse.status }
-        )        
+        )
 
 
-    } catch(error) {
+    } catch (error) {
         return NextResponse.json(
             {
                 success: false,
