@@ -11,7 +11,6 @@ export const RegisterSchema = z.object(
         graduation_year: z.number().min(1990).max(2100),
         degree_program: z.string().min(2),
         gender: z.string().min(1),
-        role: z.string().min(1),
         hostel: z.string().or(z.null()).optional(),
         profile_picture_url: z.string().or(z.null()).optional(),
         email_verified: z.boolean(),

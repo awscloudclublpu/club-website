@@ -1,9 +1,14 @@
 "use client";
 
-import { InputHTMLAttributes, useState } from "react";
+import {
+  InputHTMLAttributes,
+  useState,
+  useId,
+} from "react";
 import { cn } from "@/lib/utils";
 
-interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface FormInputProps
+  extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   error?: string;
   helperText?: string;
@@ -15,20 +20,38 @@ export function FormInput({
   helperText,
   className,
   type,
+  id,
   ...props
 }: FormInputProps) {
+  const generatedId = useId();
+  const inputId = id ?? generatedId;
+
+  const errorId = `${inputId}-error`;
+  const helperId = `${inputId}-helper`;
+
   const isPasswordType = type === "password";
   const [showPassword, setShowPassword] = useState(false);
 
+  const describedBy =
+    error ? errorId : helperText ? helperId : undefined;
+
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-blue-100/80">
+      {/* Accessible Label */}
+      <label
+        htmlFor={inputId}
+        className="block text-sm font-medium text-blue-100/80"
+      >
         {label}
       </label>
+
       <div className="relative">
         <input
           {...props}
+          id={inputId}
           type={isPasswordType && showPassword ? "text" : type}
+          aria-invalid={!!error}
+          aria-describedby={describedBy}
           className={cn(
             "w-full px-4 py-3 bg-[#0F2E4E]/80 border border-cyan-400/30 rounded-lg",
             "text-white placeholder:text-blue-300/30 focus:outline-none",
@@ -36,25 +59,32 @@ export function FormInput({
             "transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed",
             "font-mono text-sm",
             isPasswordType && "pr-12",
-            error && "border-red-500 shadow-[0_0_10px_rgba(255,107,107,0.2)]",
+            error &&
+              "border-red-500 shadow-[0_0_10px_rgba(255,107,107,0.2)]",
             className
           )}
         />
+
         {isPasswordType && (
           <button
             type="button"
-            onClick={() => setShowPassword((prev) => !prev)}
+            onClick={() =>
+              setShowPassword((prev) => !prev)
+            }
+            aria-label={
+              showPassword
+                ? "Hide password"
+                : "Show password"
+            }
             className={cn(
               "absolute right-3 top-1/2 -translate-y-1/2",
               "flex items-center justify-center w-6 h-6",
               "text-blue-300/40 hover:text-cyan-300 transition-colors duration-200",
-              "focus:outline-none focus:text-cyan-300"
+              "focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
             )}
-            tabIndex={-1}
-            aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? (
-              /* Eye Open — password is visible */
+              /* Eye Open */
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -69,7 +99,7 @@ export function FormInput({
                 <circle cx="12" cy="12" r="3" />
               </svg>
             ) : (
-              /* Eye Closed — password is hidden (default) */
+              /* Eye Closed */
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -89,14 +119,24 @@ export function FormInput({
           </button>
         )}
       </div>
+
       {error && (
-        <div className="flex items-center gap-2 text-red-400 text-xs font-medium">
+        <div
+          id={errorId}
+          className="flex items-center gap-2 text-red-400 text-xs font-medium"
+        >
           <span className="text-red-500">▸</span>
           {error}
         </div>
       )}
+
       {helperText && !error && (
-        <div className="text-blue-200/50 text-xs font-mono">{helperText}</div>
+        <div
+          id={helperId}
+          className="text-blue-200/50 text-xs font-mono"
+        >
+          {helperText}
+        </div>
       )}
     </div>
   );

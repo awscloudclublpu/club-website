@@ -30,7 +30,6 @@ interface SignupFormData {
   graduation_year: string;
   degree_program: string;
   gender: string;
-  role: string;
   hostel: string;
   profile_picture_url: string;
   password: string;
@@ -48,7 +47,6 @@ interface SignupErrors {
   graduation_year?: string;
   degree_program?: string;
   gender?: string;
-  role?: string;
   hostel?: string;
   profile_picture_url?: string;
   password?: string;
@@ -74,12 +72,6 @@ const GENDER_OPTIONS = [
   { value: "Prefer not to say", label: "Prefer not to say" },
 ];
 
-const ROLE_OPTIONS = [
-  { value: "attendee", label: "Attendee" },
-  { value: "manager", label: "Manager" },
-  { value: "core", label: "Core" },
-];
-
 const initialFormData: SignupFormData = {
   first_name: "",
   last_name: "",
@@ -91,7 +83,6 @@ const initialFormData: SignupFormData = {
   graduation_year: "",
   degree_program: "",
   gender: "",
-  role: "attendee", // Default role
   hostel: "",
   profile_picture_url: "",
   password: "",
@@ -110,7 +101,6 @@ export default function SignupPage() {
   const [step, setStep] = useState<"basic" | "academic" | "security">("basic");
   const [isRateLimited, setIsRateLimited] = useState(false);
   const [retryAfter, setRetryAfter] = useState<number | null>(null);
-  const [submitAttempts, setSubmitAttempts] = useState(0);
 
   useEffect(() => {
     return () => {
@@ -247,13 +237,10 @@ export default function SignupPage() {
       // Prevent submission if rate limited
       if (isRateLimited) {
         setGeneralError(
-          `Too many requests. Please wait ${retryAfter} second${retryAfter !== 1 ? "s" : ""} before trying again.`
+          `Too many requests. Please wait ${retryAfter ?? 60} second${(retryAfter ?? 60) !== 1 ? "s" : ""} before trying again.`
         );
         return;
       }
-
-      // Prevent multiple rapid submissions
-      setSubmitAttempts((prev) => prev + 1);
 
       setGeneralError("");
       setErrorSuggestion("");
@@ -287,7 +274,6 @@ export default function SignupPage() {
           hostel: finalHostel,
           profile_picture_url: formData.profile_picture_url.trim() || null,
         };
-
         const response = await fetch("/api/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -295,7 +281,12 @@ export default function SignupPage() {
           signal: abortControllerRef.current.signal,
         });
 
-        const data: AuthResponse = await response.json();
+        let data: AuthResponse | null = null;
+        try {
+          data = await response.json();
+        } catch (error) {
+          data = null;
+        }
 
         if (!response.ok) {
           // Handle rate limiting specifically
@@ -309,8 +300,8 @@ export default function SignupPage() {
             // Handle other HTTP errors
             const errorInfo = getUserFriendlyErrorMessage(response.status, data);
 
-            // Try to extract field-specific errors for 400 Bad Request
-            if (response.status === 400) {
+            //extract field-specific errors for 400 Bad Request
+            if (response.status === 400 && data) {
               const fieldErrors = getFieldErrors(data);
               if (Object.keys(fieldErrors).length > 0) {
                 setErrors((prev) => ({ ...prev, ...fieldErrors }));
@@ -547,17 +538,6 @@ export default function SignupPage() {
                     disabled={loading}
                     required
                   />
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <FormSelect
-                      label="Role"
-                      options={ROLE_OPTIONS}
-                      value={formData.role}
-                      onChange={(e) => handleInputChange("role", e.target.value)}
-                      error={errors.role}
-                      disabled={loading}
-                    />
-                  </div>
 
                   <FormInput
                     label="Profile Picture URL"

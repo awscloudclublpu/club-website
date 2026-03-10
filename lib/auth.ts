@@ -89,8 +89,26 @@ export function parseAuthError(
   return AUTH_ERRORS.SERVER_ERROR.message;
 }
 
+function extractBackendMessage(responseData: any): string | null {
+  if (!responseData) return null;
+
+  if (Array.isArray(responseData.detail) && responseData.detail[0]?.msg) {
+    return responseData.detail[0].msg;
+  }
+
+  if (typeof responseData.detail === "string") {
+    return responseData.detail;
+  }
+
+  if (typeof responseData.message === "string") {
+    return responseData.message;
+  }
+
+  return null;
+}
+
 /**
- * Parse HTTP error response with production-grade handling
+ * Parse HTTP error response
  * Handles validation errors, rate limiting, and server errors
  */
 export function parseHttpError(
@@ -109,12 +127,18 @@ export function parseHttpError(
                        responseData?.code === "TOO_MANY_REQUESTS";
 
   // Use custom message if provided by backend
+  // Extract backend-provided message (FastAPI compatible)
+  const backendMessage = extractBackendMessage(responseData);
+
   let message = baseMessage;
-  if (responseData?.message && typeof responseData.message === "string") {
-    // Only use backend message if it's concise and not HTML
-    if (!responseData.message.includes("<") && responseData.message.length < 200) {
-      message = responseData.message;
-    }
+
+  if (
+    backendMessage &&
+    typeof backendMessage === "string" &&
+    !backendMessage.includes("<") &&
+    backendMessage.length < 200
+  ) {
+    message = backendMessage;
   }
 
   return {

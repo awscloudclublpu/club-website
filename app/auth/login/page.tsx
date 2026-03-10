@@ -14,7 +14,6 @@ import {
   parseHttpError,
   type AuthResponse,
 } from "@/lib/auth";
-import { getUserRole } from "@/lib/jwt";
 
 interface LoginError {
   email?: string;
@@ -34,7 +33,6 @@ export default function Login() {
   const [errorSuggestion, setErrorSuggestion] = useState("");
   const [isRateLimited, setIsRateLimited] = useState(false);
   const [retryAfter, setRetryAfter] = useState<number | null>(null);
-  const [submitAttempts, setSubmitAttempts] = useState(0);
 
   useEffect(() => {
     return () => {
@@ -99,7 +97,6 @@ export default function Login() {
       }
 
       setLoading(true);
-      setSubmitAttempts((prev) => prev + 1);
       abortControllerRef.current = new AbortController();
 
       try {
@@ -154,8 +151,6 @@ export default function Login() {
         const token = data?.data?.token || data?.data?.access_token;
         if (token) {
           localStorage.setItem("authToken", token);
-          const role = getUserRole(token);
-          localStorage.setItem("userRole", role);
         }
 
         setTimeout(() => {
