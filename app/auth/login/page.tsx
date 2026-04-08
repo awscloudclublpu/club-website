@@ -66,12 +66,12 @@ export default function Login() {
 
   return (
     <AuthShell
-      eyebrow="Secure student portal"
       title="Welcome back"
-      description="Sign in to access club updates, programs, and member-only experiences powered by the AWS Cloud Club community."
+      description="Sign in to continue to your dashboard."
       footerText="New here?"
       footerHref="/auth/register"
       footerLinkLabel="Create an account"
+      compact
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -103,7 +103,7 @@ export default function Login() {
         <button
           type="submit"
           disabled={loading}
-          className="group inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-400 px-4 py-3 font-semibold text-[#08192F] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+          className="group inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-orange-500 to-amber-400 px-4 py-3 font-semibold text-[#08192F] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? 'Logging in...' : 'Login to portal'}
           {!loading && <span className="transition-transform group-hover:translate-x-0.5">→</span>}

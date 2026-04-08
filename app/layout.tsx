@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { NavigationBar } from "@/components/Navigation";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
