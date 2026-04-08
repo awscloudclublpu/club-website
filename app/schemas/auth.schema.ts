@@ -44,9 +44,21 @@ export type LoginInput = z.infer<typeof loginSchema>
 export const profileUpdateSchema = z.object({
   full_name: fullName.optional(),
   avatar_url: z.string().url().optional(),
+  workspace_uid: z.string().min(1, 'Workspace ID is required').optional(),
+  workspace_name: z.string().min(2, 'Workspace name is required').optional(),
 })
 
 export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>
+
+/**
+ * 👤 PROFILE COMPLETION (from dashboard)
+ */
+export const profileCompletionSchema = z.object({
+  workspace_uid: z.string().min(1, 'Workspace ID is required'),
+  workspace_name: z.string().min(2, 'Workspace name must be at least 2 characters'),
+})
+
+export type ProfileCompletionInput = z.infer<typeof profileCompletionSchema>
 
 /**
  * 🔐 CHANGE PASSWORD (optional)
