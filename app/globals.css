@@ -46,6 +46,39 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
+@media print {
+  @page {
+    size: auto;
+    margin: 12mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  body::before {
+    display: none !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #ticket-print-root,
+  #ticket-print-root * {
+    visibility: visible;
+  }
+
+  #ticket-print-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}
+
 :root {
   --radius: 0.625rem;
   --background: #0B1D3A;

@@ -5,6 +5,17 @@ import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import UserRoleTable from '@/components/admin/UserRoleTable'
 
+type Role = 'member' | 'core' | 'admin'
+
+type AdminUser = {
+  id: string
+  full_name: string | null
+  email: string | null
+  workspace_uid: string | null
+  workspace_name: string | null
+  role: Role
+}
+
 export default async function AdminUsersPage() {
   const supabase = await createSupabaseServerClient()
 
@@ -28,8 +39,26 @@ export default async function AdminUsersPage() {
 
   const { data: users } = await supabaseAdmin
     .from('profiles')
-    .select('id, full_name, role')
+    .select('id, full_name, workspace_uid, workspace_name, role')
     .order('full_name', { ascending: true })
+
+  const { data: authUsersData } = await supabaseAdmin.auth.admin.listUsers({
+    page: 1,
+    perPage: 1000,
+  })
+
+  const emailByUserId = new Map(
+    (authUsersData?.users ?? []).map((authUser) => [authUser.id, authUser.email ?? null])
+  )
+
+  const mergedUsers: AdminUser[] = (users ?? []).map((profile) => ({
+    id: profile.id,
+    full_name: profile.full_name,
+    email: emailByUserId.get(profile.id) ?? null,
+    workspace_uid: profile.workspace_uid,
+    workspace_name: profile.workspace_name,
+    role: profile.role as Role,
+  }))
 
   return (
     <div className="relative min-h-screen overflow-hidden px-4 pb-12 pt-28 text-white sm:px-6 lg:px-8">
@@ -62,7 +91,7 @@ export default async function AdminUsersPage() {
             <p className="text-sm font-mono uppercase tracking-[0.24em] text-cyan-300/80">Club users</p>
           </div>
 
-          <UserRoleTable users={(users ?? []) as Array<{ id: string; full_name: string | null; role: 'member' | 'core' | 'admin' }>} currentUserId={user.id} />
+          <UserRoleTable users={mergedUsers} currentUserId={user.id} />
         </div>
       </div>
     </div>

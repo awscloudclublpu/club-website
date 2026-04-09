@@ -1,6 +1,7 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import DashboardClient from '@/components/DashboardClient'
+import { supabaseAdmin } from '@/lib/supabase/admin'
 
 export default async function DashboardPage() {
   const supabase = await createSupabaseServerClient()
@@ -24,11 +25,27 @@ export default async function DashboardPage() {
   const role = profile?.role || 'member'
   const workspaceUid = (profile?.workspace_uid ?? '').trim()
   const workspaceName = (profile?.workspace_name ?? '').trim()
-  const qrData = JSON.stringify({ user_id: user.id })
 
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
-    qrData
-  )}`
+  const now = new Date()
+  const windowStart = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString()
+  const windowEnd = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString()
+
+  const { data: ticketWindowEvents } = await supabaseAdmin
+    .from('events')
+    .select('id, title, event_date, location')
+    .gte('event_date', windowStart)
+    .lte('event_date', windowEnd)
+    .order('event_date', { ascending: true })
+    .limit(10)
+
+  const upcomingEvent =
+    ticketWindowEvents && ticketWindowEvents.length
+      ? ticketWindowEvents.reduce((closest, current) => {
+          const closestDelta = Math.abs(new Date(closest.event_date).getTime() - now.getTime())
+          const currentDelta = Math.abs(new Date(current.event_date).getTime() - now.getTime())
+          return currentDelta < closestDelta ? current : closest
+        })
+      : null
 
   const isProfileIncomplete = !workspaceUid || !workspaceName
 
@@ -37,10 +54,19 @@ export default async function DashboardPage() {
       displayName={displayName}
       email={email}
       role={role}
-      qrUrl={qrUrl}
       isProfileIncomplete={isProfileIncomplete}
       workspaceUid={workspaceUid}
       workspaceName={workspaceName}
-      />
-    )
-  }
+      upcomingEvent={
+        upcomingEvent
+          ? {
+              id: upcomingEvent.id,
+              title: upcomingEvent.title,
+              eventDate: upcomingEvent.event_date,
+              location: upcomingEvent.location,
+            }
+          : null
+      }
+    />
+  )
+}
