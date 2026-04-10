@@ -93,7 +93,10 @@ export default function ProfilePage() {
       const data = await response.json()
 
       if (!response.ok) {
-        setError(data.error || 'Failed to update profile')
+        const detailMessage = data?.details
+          ? Object.values(data.details).flat().find(Boolean)
+          : null
+        setError((detailMessage as string) || data.error || 'Failed to update profile')
         setIsLoading(false)
         return
       }

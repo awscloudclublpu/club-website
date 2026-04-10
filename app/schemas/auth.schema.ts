@@ -43,7 +43,10 @@ export type LoginInput = z.infer<typeof loginSchema>
  */
 export const profileUpdateSchema = z.object({
   full_name: fullName.optional(),
-  avatar_url: z.string().url().optional(),
+  avatar_url: z.union([
+    z.string().url('Avatar URL must be a valid URL'),
+    z.literal('')
+  ]).optional(),
   workspace_uid: z.string().min(1, 'Workspace ID is required').optional(),
   workspace_name: z.string().min(2, 'Workspace name is required').optional(),
 })
