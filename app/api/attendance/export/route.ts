@@ -13,6 +13,21 @@ const querySchema = z.object({
 
 export async function GET(req: Request) {
   try {
+    const convertToIST = (utcTimestamp: string | null): string => {
+      if (!utcTimestamp) return ''
+      const date = new Date(utcTimestamp)
+      const istFormatter = new Intl.DateTimeFormat('en-IN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZone: 'Asia/Kolkata',
+      })
+      return istFormatter.format(date)
+    }
+
     const supabase = await createSupabaseServerClient()
     const { searchParams } = new URL(req.url)
     const parsedQuery = querySchema.safeParse({
@@ -53,7 +68,8 @@ export async function GET(req: Request) {
         scanned_at,
         profiles (
           full_name,
-          email
+          email,
+          workspace_uid
         ),
         events (
           title,
@@ -84,6 +100,7 @@ export async function GET(req: Request) {
     const headers = [
       'Name',
       'Email',
+      'Workspace UID',
       'Event',
       'Location',
       'Event Date',
@@ -94,6 +111,7 @@ export async function GET(req: Request) {
     const grouped = new Map<string, {
       name: string
       email: string
+      workspaceUid: string
       event: string
       location: string
       eventDate: string
@@ -104,6 +122,7 @@ export async function GET(req: Request) {
     ;(data || []).forEach((row: any) => {
       const name = row.profiles?.full_name || ''
       const email = row.profiles?.email || ''
+      const workspaceUid = row.profiles?.workspace_uid || ''
       const event = row.events?.title || ''
       const location = row.events?.location || ''
       const eventDate = row.events?.event_date || ''
@@ -113,6 +132,7 @@ export async function GET(req: Request) {
       const current = grouped.get(key) || {
         name,
         email,
+        workspaceUid,
         event,
         location,
         eventDate,
@@ -147,11 +167,12 @@ export async function GET(req: Request) {
       .map((item) => [
         item.name,
         item.email,
+        item.workspaceUid,
         item.event,
         item.location,
         item.eventDate,
-        item.checkIn || '',
-        item.checkOut || '',
+        convertToIST(item.checkIn),
+        convertToIST(item.checkOut),
       ])
 
     const csv = [
@@ -159,18 +180,16 @@ export async function GET(req: Request) {
       ...rows.map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(',')),
     ].join('\n')
 
-    const fileNameParts = ['attendance']
+    let fileName = 'attendance.csv'
 
-    if (eventId) {
-      fileNameParts.push(`event-${eventId}`)
+    if (eventId && data && data.length > 0) {
+      const firstRow = data[0] as any
+      const eventTitle = firstRow.events?.title || 'event'
+      const sanitizedTitle = eventTitle.toLowerCase().replace(/\s+/g, '_')
+      fileName = `${sanitizedTitle}_attendance.csv`
+    } else if (startDate && endDate) {
+      fileName = `attendance_${startDate}_to_${endDate}.csv`
     }
-
-    if (startDate || endDate) {
-      fileNameParts.push(`from-${startDate || 'start'}`)
-      fileNameParts.push(`to-${endDate || 'end'}`)
-    }
-
-    const fileName = `${fileNameParts.join('-')}.csv`
 
     return new Response(csv, {
       headers: {

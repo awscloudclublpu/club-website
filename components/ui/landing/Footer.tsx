@@ -27,11 +27,11 @@ export default function Footer() {
             </p>
             
             <div className="flex gap-3">
-              <a href="https://www.linkedin.com/company/aws-cloud-community-lpu" target="_blank" rel="noopener noreferrer" 
+              <a href="https://www.linkedin.com/company/awscloudclublpu" target="_blank" rel="noopener noreferrer" 
                  className="w-10 h-10 bg-blue-900/50 hover:bg-blue-800 border-2 border-cyan-400 flex items-center justify-center transition-all">
                 <Linkedin className="inline"/>
               </a>
-              <a href="https://instagram.com/awscloudcommunity.lpu" target="_blank" rel="noopener noreferrer" 
+              <a href="https://instagram.com/awscloudclublpu" target="_blank" rel="noopener noreferrer" 
                 className="w-10 h-10 bg-blue-900/50 hover:bg-blue-800 border-2 border-cyan-400 flex items-center justify-center transition-all">
                 <svg
                   role="img"
