@@ -60,13 +60,13 @@ export default function DashboardClient({
               <CircleGauge size={14} className="mr-2" />
               My Profile
             </Link>
-            {/* <Link
+            <Link
               href="/certificates"
               className="inline-flex h-10 items-center rounded-xl border border-cyan-400/30 bg-blue-950/60 px-4 text-xs font-semibold text-cyan-200 transition hover:border-cyan-300"
             >
               <Ticket size={14} className="mr-2" />
               My Certificates
-            </Link> */}
+            </Link>
             <Link
               href="/attendance/my"
               className="inline-flex h-10 items-center rounded-xl border border-cyan-400/30 bg-blue-950/60 px-4 text-xs font-semibold text-cyan-200 transition hover:border-cyan-300"

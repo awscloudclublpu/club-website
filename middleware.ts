@@ -35,6 +35,10 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/auth/login', req.url))
   }
 
+  if (!user && pathname.startsWith('/certificates')) {
+    return NextResponse.redirect(new URL('/auth/login', req.url))
+  }
+
   if (user && (
     pathname === '/auth/login' ||
     pathname === '/auth/register'
@@ -82,6 +86,7 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     '/dashboard/:path*',
+    '/certificates/:path*',
     '/admin/:path*',
     '/attendance/:path*',
     '/auth/login',
