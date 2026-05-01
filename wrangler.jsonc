@@ -1,7 +1,7 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"main": ".open-next/worker.js",
-	"name": "awsclublpu",
+	"name": "awsbuilderslpu",
 	"compatibility_date": "2026-04-08",
 	"compatibility_flags": [
 		"nodejs_compat",
